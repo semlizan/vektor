@@ -41,6 +41,28 @@ public:
 		(array + —size)->~T();
 		return *this;
 	}
+	Vector<T> & clear(){
+		for (int i = 0; i < size; i++)
+			(array + i)->~T();
+
+		delete(array);
+
+		array = (T*)(operator new (0));
+		size = capacity = 0;
+		return *this;
+	}
+	~Vector(){
+		delete (array);
+	}
+	T& operator[] (int i){
+		return array[i];
+	}
+	bool empty() const{
+		return size == 0;
+	}
+
+
+
 };
 int main(){
 
