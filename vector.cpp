@@ -1,163 +1,219 @@
-#include<iostream>
+п»ї#include<iostream>
 
 using namespace std;
 
-template <typename T>//шаблонный класс вектор
-class Vector{//класс вектор 
-	T * array;//массив может быть любого типа 
-	int size;//размер 
-	int capacity;//вместимость
+template <typename T>//С€Р°Р±Р»РѕРЅРЅС‹Р№ РєР»Р°СЃСЃ РІРµРєС‚РѕСЂР°
+class Vector{//РєР»Р°СЃСЃ РІРµРєС‚РѕСЂР° 
+	T * array;//РјР°СЃСЃРёРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»СЋР±РѕРіРѕ С‚РёРїР°
+	int size;//СЂР°Р·РјРµСЂ
+	int capacity;//РІРјРµСЃС‚РёРјРѕСЃС‚СЊ
 public:
-	typedef T* iterator;//объявляем итератор именем типа 
-	iterator begin() { return array; }//указытель на первый элемент
-	iterator end() { return array + size; }//указатель  на воображаемый несуществующий элемент, следующий за последним.
+	typedef T* iterator;//РѕР±СЉСЏРІР»СЏРµРј РёС‚РµСЂР°С‚РѕСЂ РёРјРµРЅРµРј С‚РёРїР°
+	iterator begin() { return array; }//СѓРєР°Р·Р°С‚РµСЊ РЅР° РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚
+	iterator end() { return array + size; }//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РІРѕРѕР±СЂР°Р¶Р°РµРјС‹Р№ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚,СЃР»РµРґСѓСЋС‰РёР№ Р·Р° РїРѕСЃР»РµРґРЅРёРј
 
-	Vector() : capacity(0), size(0) {//конструктор по умолчанию
-		array = (T*)(operator new (0));//выделяет память для массива 
+	Vector() : capacity(0), size(0) {//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+		array = (T*)(operator new (0));//РІС‹РґРµР»СЏРµС‚СЃСЏ РїР°РјСЏС‚СЊ РґР»СЏ РјР°СЃСЃРёРІР°
 	}
-	Vector(int size) : Vector(size, T()){}//Конструктор, позволяющий задавать размерность вектора, но не являющийся конструктором преобразования
-	
-	Vector(int _size, const T& value)//конструктор копирования из одного вектора в другой 
+	Vector(int size) : Vector(size, T()){}//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕР·РІРѕР»СЏСЋС‰РёР№ Р·Р°РґР°С‚СЊ СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РІРµРєС‚РѕСЂР°, РЅРѕ РЅРµ СЏРІР»СЏСЋС‰РёРјСЃСЏ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРј РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
+
+	Vector(int _size, const T& value)//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ РёР· РѕРґРЅРѕРіРѕ РІРµРєС‚РѕСЂР° РІ РґСЂСѓРіРѕР№
 	{
-		size = _size;//задаем размер массива
-		capacity = size;//задаем вместимость
-		array = (T*)(operator new (sizeof(T)* capacity));//выделяем память для массива, с размером и вместимостью
+		size = 0;//Р·Р°РґР°РµРј СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР°
+		capacity = size;//Р·Р°РґР°РµРј РІРјРµСЃС‚РёРјРѕСЃС‚СЊ 
+		array = (T*)(operator new (sizeof(T)* capacity));//РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РґР»СЏ РјР°СЃСЃРёРІР°,СЃ СЂР°Р·РјРµСЂРѕРј Рё РІРјРµСЃС‚РёРјРѕСЃС‚СЊСЋ
 		for (int i = 0; i < size; i++){
-			new (array + i)T(value);//кладем в массив значения
+			new (array + i)T(value);//РєР»Р°РґРµРј РІ РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёСЏ
 		}
 	};
-	Vector<T> & pushBack(const T& value){//добавление элементов
+	Vector<T> & pushBack(const T& value){//РґРѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°
 		if (size == capacity)
-			reserve();//увеличиваем массив
+			reserve(size + 1);//СѓРІРµР»РёС‡РёРІР°РµРј РјР°СЃСЃРёРІ
 
 		array[size++] = value;
-		return *this;//указатель на текущий вектор 
+		return *this;//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РµРєСѓС‰РёР№ РІРµРєС‚РѕСЂ
 	}
-	unsigned int _size() const {//возвращает размер
+	unsigned int _size() const {//РІРѕР·РІСЂР°С‰Р°РµРј СЂР°Р·РјРµСЂ
 		return (unsigned int)size;
 	}
-	unsigned int _capaciy() const {//возвращает вместимость
-		return (unsigned int)capaciy;
+	unsigned int _capaciy() const {//РІРѕР·РІСЂР°С‰Р°Рµ РІРјРµСЃС‚РёРјРѕСЃС‚СЊ, С‡С‚РѕР± РЅРµР±С‹Р»Рѕ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёР№
+		return (unsigned int)capacity;
 	}
-	Vector<T> & popBack()//уделение элементов
+	Vector<T> & popBack()//СѓРґР°Р»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°
 	{
-		(array + —size)->~T();//вызываем диструктор для конкретного элемента
+		(array + вЂ”size)->~T();//РІС‹Р·С‹РІР°РµРј РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РєРѕРЅРєСЂСѓС‚РЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° Рё СЃРґРІРёРіР°РµРј  
 		return *this;
 	}
-	Vector<T> & clear(){
+	Vector<T> & clear(){//СѓРґР°Р»СЏРµРј РјР°СЃСЃРёРІ
 		for (int i = 0; i < size; i++)
-			(array + i)->~T();//удалили элементы
+			(array + i)->~T();//СѓРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚
 
-		delete(array);//удалили массив
+		operator delete(array);//СѓРґР°Р»СЏРµРј РјР°СЃСЃРёРІ
 
-		array = (T*)(operator new (0));//выделяем пустой массив
+		array = (T*)(operator new (0));//РІС‹РґРµР»СЏРµРј РїСѓСЃС‚РѕР№ РјР°СЃСЃРёРІ
 		size = capacity = 0;
 		return *this;
 	}
-	~Vector(){//деструктор на удаление массива
-		delete (array);
+
+	~Vector(){//РґРµСЃС‚СЂСѓРєС‚РѕСЂ РЅР° СѓРґР°Р»РµРЅРёРµ Р»СЋР±РѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+		delete[] array;
 	}
-	T& operator[] (int i){//обращение по индексу
+
+	T& operator[] (int i){//РѕР±СЂР°С‰РµРЅРёРµ РїРѕ РёРЅРґРµРєСЃСѓ
 		return array[i];
-	}
-	bool empty() const{//обнуляем размер
-		return size == 0;
+	};
+	bool empty() const{
+		return size == 0;//РѕР±РЅСѓР»СЏРµРј СЂР°Р·РјРµСЂ
 	}
 
-void erase(iterator it){//удаление одного элементов
+	void erase(iterator it){//СѓРґР°Р»РµРЅРёРµ РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
 		if (it < begin() || end() <= it)
-			throw nullptr;//бросает 0
-		for (int i = (int)(it - array); i < size; i++)
-			array[i] = array[i + 1];//сдвигаем
+			throw nullptr;//Р±СЂРѕСЃР°РµРј 0
+		int i = (int)(it - array);//РїРѕР»СѓС‡Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЌР»РµРјРµРЅС‚ РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ СѓРґР°Р»РёС‚СЊ
+		array[i].~T();
+		for (; i < size - 1; i++){
+			array[i] = array[i + 1]; //СЃРґРІРёРіР°РµРј
+		}
+		size--;
+
 	}
 
-void erase(iterator it, int n)//удаляем н эелементов
-{
-	if (n == 1)
+	void erase(iterator it, int n)//СѓРґР°Р»РµРЅРёРµ РЅ СЌР»РµРјРµРЅС‚РѕРІ РїРѕ РѕРґРЅРѕРјСѓ
 	{
-		erase(it);//удаление одного элементов
-		return;
-	}
-	int i = 0;
-	//for (Vector<T>::iterator iterator1 = it; iterator1 != it; iterator1++, i++);
-	for (i; i < n; i++);
-	erase(it, array + i);
-}
+		if (n == 1)
+		{
+			erase(it);//СѓРґР°Р»РµРЅРёРµ РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° 
+			return;
+		}
+		else if (it > begin() || it <= end())		{
+			int i = (int)(it - array);//РїРѕР»СѓС‡Р°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЌР»РµРјРµРЅС‚ РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ СѓРґР°Р»РёС‚СЊ
+			for (int j = i; j < n; j++){
+				array[j].~T();
+			}
+			for (int j = i; j < size; j++){
+				array[j] = array[j + n];
+			}
+			size -= n;
+		}
+	};
 
-void erase(iterator it_begin, iterator it_end)
-{
-	if (it_begin < begin() || end() <= it_begin)//итератор должен находится посередине
-		throw nullptr;
 
-	if (it_end < begin() || end() <= it_end)
-		throw nullptr;
-
-	int i = (int)(it_begin - array);//вычитаем указатели
-	int	j = (int)(it_end - array);//вычитаем указатели
-
-	if (i == j)
+	void erase(iterator it_begin, iterator it_end)
 	{
-		erase(it_begin); // удаление одного элементов
-		return;
-	}
-	j++;
+		if (it_begin < begin() || it_begin > end())//РёС‚РµСЂР°С‚РѕСЂ РґРѕР»Р¶РµРЅ РЅР°С…РѕРґРёС‚СЃСЏ РїРѕСЃРµСЂРµРґРёРЅРµ
+			throw nullptr;
 
-	while (j < size)
-	{
-		*(array + i) = *(array + j);//стираем элементы с двух сторон
-		i++;
+		if (it_end < begin() || it_end > end())
+			throw nullptr;
+
+		int i = (int)(it_begin - array);//РІС‹С‡РёС‚Р°РµРј СѓРєР°Р·Р°С‚РµР»Рё
+		int	j = (int)(it_end - array);//РІС‹С‡РёС‚Р°РµРј СѓРєР°Р·Р°С‚РµР»Рё
+
+		if (i == j)//РєРѕРЅРµС† Рё РЅР°С‡Р°Р»Рѕ (СЏРєРѕР±С‹)
+		{
+			erase(it_begin); // СѓРґР°Р»РµРЅРёРµ РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°
+			return;
+		}
 		j++;
+
+		while (j < size)
+		{
+			*(array + i) = *(array + j);//СЃС‚РёСЂР°РµРј СЌР»РµРјРµРЅС‚С‹ СЃ РґРІСѓС… СЃС‚РѕСЂРѕРЅ 
+			i++;
+			j++;
+
+			size--;
+		}
 	}
-}
 
-void insert(const iterator it, T value)//вставка
-{
-	if (it < begin() || end() <= it)
-		throw nullptr;
-
-	Vector<T>::iterator it1 = it;//новый итератор
-	if (size == capacity)
+	void insert(const iterator it, T value)//РІСЃС‚Р°РІРєР°
 	{
-		int i = (int)(it1 - array);//вычитаем указатели
-		reserve();//добавляем памяти
-		it1 = array + i;
+		if (it < begin() || end() <= it)
+			throw nullptr;
+
+		Vector<T>::iterator it1 = it;//РЅРѕРІС‹РІР№ РёС‚РµСЂР°С‚РѕСЂ
+		if (size == capacity)
+		{
+			int i = (int)(it1 - array);//РІС‹С‡РёС‚Р°РµРј СѓРєР°Р·Р°С‚РµР»Рё
+			reserve();//РґРѕР±Р°РІР»СЏРµРј РїР°РјСЏС‚Рё
+			it1 = array + i;
+		}
+
+		new (end())T();//РЅРѕРІС‹Р№ РёС‚РµСЂР°С‚РѕСЂ
+
+		for (Vector<T>::iterator i = end(); i != it1; i--)
+			*i = *(i - 1);//
+
+		*it1 = value;//РєР»Р°РґРµРј РІ РІРµРєС‚РѕСЂ Р·РЅР°С‡РµРЅРёРµ СЃ РїРјРѕС‰СЊСЋ РІРµРєС‚РѕСЂР°
+		size++;
+		return;
 	}
 
-	new (end())T();//новый итератор
+	void reserve(int _capacity)//СѓРІРµР»РёС‡РёРІР°РµРј РјР°СЃСЃРёРІ
+	{
+		if (capacity >= _capacity)//СЃСЂР°РІРЅРёРІР°РµРј С‚РµРєСѓС‰СѓСЋ РІРјРµСЃС‚РёРјРѕСЃС‚СЊ Рё РєРѕС‚РѕСЂР°СЏ РІРѕРѕР±С‰Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ
+			return;
+		T *newArray = (T*)(operator new (sizeof(T)* _capacity));//СЃРѕР·РґР°Р»Рё РЅРѕРІС‹РІР№ РјР°СЃСЃРёРІ
+		size = _size();
+		if (capacity == 0){//РµСЃР»Рё РІРјРµСЃС‚РёРјРѕСЃС‚СЊ = 0 С‚Рѕ РЅР°РґРѕ СѓРІРµР»РёСЃРёС‚СЊ
+			capacity = 2;
+		}
+		else capacity *= 2;//СѓРІРµР»РёС‡РёРІР°СЋ РІ 2 СЂР°Р·Р°
 
-	for (Vector<T>::iterator i = end(); i != it1; i--)
-		*i = *(i - 1);//стираем с двух концов
+		for (int i = 0; i < size; i++)
+			new(newArray + i)T(array[i]);//Р·Р°РїРѕР»РЅСЏРµРј РЅРѕРІС‹Р№ РјР°СЃСЃРёРІ СЌР»РµРјРµРЅС‚Р°РјРё
 
-	*it1 = value;//кладем в вектор значение с помощью вектора 
-	size++;
-	return;
-}
-
-void reserve()//увеличиваем массива
-{
-	if (capacity == 0){//если вместимость равна нулю, то надо увеличить
-		capacity = 2; 
+		for (int i = 0; i < size; i++){
+			array[i].~T();//СѓРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚С‹ СЃС‚Р°СЂРѕРіРѕ РјР°СЃСЃРёРІР°
+		}
+		int sz = size;//РїРµСЂРµРѕРїСЂРµРґРµР»СЏРµРј РґР»СЏ РЅРѕРІРѕРіРѕ РјР°СЃСЃРёРІР°
+		clear();
+		size = sz;
+		capacity = _capacity;
+		array = newArray;//РїСЂРёСЂР°РІРЅРёРІР°РµРј РјР°СЃСЃРёРІС‹
 	}
-	else capacity *= 2;
-	T *newArray = (T*)(operator new (sizeof(T)* capacity));//создали новый массив
-
-	for (int i = 0; i < size; i++)
-		new(newArray + i)T(array[i]);//заполняем новый массив элементами
-
-	for (int i = 0; i < size; i++){
-		array[i].~T();//удаляем элементы старого массива
+	void swap(Vector<T>& vector)//РјРµРЅСЏРµРј РјРµСЃС‚Р°РјРё
+	{
+		swap(array, vector.array);
+		swap(size, vector.size);
+		swap(capacity, vector.capacity);
 	}
-	array = newArray;//приравниваем массивы
-}
 
-void swap(Vector<T>& vector)//меняем местами
-{
-	swap(array, vector.array);
-	swap(size, vector.size);
-	swap(capacity, vector.capacity);
-}
-
-
+	T sum(Vector<T>& vector)
+	{
+		T sum = 0;
+		int i = 0;
+		for (i; i < size; i++){
+			sum += array[i] + vector.array[i];
+		}
+		return sum;
+	}
 };
+
 int main(){
+	Vector<int> vect1(10);
+	/*
+	Vector<int> vect2(10);
+	*/
+	for (int i = 0; i < 10; ++i)
+	{
+		vect1.pushBack(i);
+	}
+	/*
+	for (int i = 0; i < 10; ++i)
+	{
+	vect2.pushBack(i);
+	};
+	*/
+	//system("pause");
+
+	//cout << vect1[2];
+	cout << vect1._size() << endl;
+	//vect1.erase(vect1.begin()+1,2);
+
+	vect1.erase(vect1.begin() + 1, vect1.begin() + 4);
+
+	cout << vect1._size() << endl;
+	system("pause");
+	//cout << vect2.sum(vect1);
 }
