@@ -19,7 +19,7 @@ public:
 
 	Vector(int _size, const T& value)//конструктор копирования из одного вектора в другой
 	{
-		size = 0;//задаем размер массива
+		size = _size;//задаем размер массива
 		capacity = size;//задаем вместимость 
 		array = (T*)(operator new (sizeof(T)* capacity));//выделяем память для массива,с размером и вместимостью
 		for (int i = 0; i < size; i++){
@@ -41,7 +41,7 @@ public:
 	}
 	Vector<T> & popBack()//удаление элемента
 	{
-		(array + —size)->~T();//вызываем конструктор для конкрутного элемента и сдвигаем  
+		(array + -size)->~T();//вызываем конструктор для конкрутного элемента и сдвигаем  
 		return *this;
 	}
 	Vector<T> & clear(){//удаляем массив
@@ -57,11 +57,14 @@ public:
 
 	~Vector(){//деструктор на удаление любого элемента
 		delete[] array;
+		size = 0;
+		capacity = 0;
 	}
 
 	T& operator[] (int i){//обращение по индексу
 		return array[i];
-	};
+	}
+
 	bool empty() const{
 		return size == 0;//обнуляем размер
 	}
@@ -95,6 +98,7 @@ public:
 			}
 			size -= n;
 		}
+		else throw nullptr;
 	};
 
 
@@ -103,12 +107,11 @@ public:
 		if (it_begin < begin() || it_begin > end())//итератор должен находится посередине
 			throw nullptr;
 
-		if (it_end < begin() || it_end > end())
+		if (it_end < begin() || it_end >= end())
 			throw nullptr;
 
 		int i = (int)(it_begin - array);//вычитаем указатели
 		int	j = (int)(it_end - array);//вычитаем указатели
-
 		if (i == j)//конец и начало (якобы)
 		{
 			erase(it_begin); // удаление одного элемента
@@ -116,13 +119,13 @@ public:
 		}
 		j++;
 
-		while (j < size)
+		while (i != j)
 		{
 			*(array + i) = *(array + j);//стираем элементы с двух сторон 
 			i++;
-			j++;
+			j--;
 
-			size--;
+			size-=2;
 		}
 	}
 
@@ -191,11 +194,11 @@ public:
 };
 
 int main(){
-	Vector<int> vect1(10);
+	Vector<int> vect1(50);
 	/*
 	Vector<int> vect2(10);
 	*/
-	for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 50; ++i)
 	{
 		vect1.pushBack(i);
 	}
